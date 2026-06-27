@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize Gemini API client if key is present
 let genAI = null;
-if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here') {
+if (process.env.GEMINI_API_KEY) {
   genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 }
 
@@ -19,7 +19,7 @@ const generateBookSummary = async (bookDetails) => {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       generationConfig: { responseMimeType: 'application/json' }
     });
 
@@ -54,7 +54,7 @@ const generateBookSummary = async (bookDetails) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const jsonText = response.text();
-    
+
     return JSON.parse(jsonText);
   } catch (error) {
     console.error('Error generating summary from Gemini API:', error);
@@ -76,9 +76,9 @@ const chatWithBook = async (book, chatHistory, userMessage) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-    const formattedHistory = chatHistory.map(msg => 
+    const formattedHistory = chatHistory.map(msg =>
       `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.message}`
     ).join('\n');
 
@@ -126,7 +126,7 @@ const compareBooks = async (bookA, bookB) => {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       generationConfig: { responseMimeType: 'application/json' }
     });
 
